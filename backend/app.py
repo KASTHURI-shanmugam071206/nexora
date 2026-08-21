@@ -188,3 +188,46 @@ def _find_route_for_trip(start_name, end_name):
     end_key = _normalize_stop(end_name)
 
    
+ routes = _route_payload()
+
+    # ---------------------------------------------------------
+    # 1. FIRST: Look for a direct route
+    # ---------------------------------------------------------
+    for route in routes:
+        stop_keys = [
+            _normalize_stop(stop["name"])
+            for stop in route["stops"]
+        ]
+
+        if start_key in stop_keys and end_key in stop_keys:
+            start_index = stop_keys.index(start_key)
+            end_index = stop_keys.index(end_key)
+
+            if end_index > start_index:
+                route["match_type"] = "direct"
+                return route
+
+    # ---------------------------------------------------------
+    # 2. NO DIRECT ROUTE
+    #    Find a route that contains the destination
+    # ---------------------------------------------------------
+    destination_routes = []
+
+    for route in routes:
+        stop_keys = [
+            _normalize_stop(stop["name"])
+            for stop in route["stops"]
+        ]
+
+        if end_key in stop_keys:
+            destination_routes.append(route)
+
+    if destination_routes:
+        route = destination_routes[0]
+        route["match_type"] = "destination"
+        return route
+
+    # ---------------------------------------------------------
+    # 3. No route found at all
+    # ---------------------------------------------------------
+    return None
