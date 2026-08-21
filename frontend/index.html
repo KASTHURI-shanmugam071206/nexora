@@ -382,3 +382,22 @@
 
     <footer>MAPPY demo route planner — unique color-coded routes and time-window bus details.</footer>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    const API_BASE = 'http://localhost:5000';
+    const USER_KEY = 'mappy_logged_user';
+    const loginScreen = document.getElementById('loginScreen');
+    const appScreen = document.getElementById('appScreen');
+    const loginForm = document.getElementById('loginForm');
+    const loginMessage = document.getElementById('loginMessage');
+    const userBadge = document.getElementById('userBadge');
+    const routeList = document.getElementById('routeList');
+    const routeSelect = document.getElementById('routeSelect');
+    const fromStopSelect = document.getElementById('fromStopSelect');
+    const toStopSelect = document.getElementById('toStopSelect');
+    const timeInput = document.getElementById('timeInput');
+    const busList = document.getElementById('busList');
+    const routeSummary = document.getElementById('routeSummary');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const searchBtn = document.getElementById('searchBtn');
+    const useLocationBtn = document.getElementById('useLocationBtn');
