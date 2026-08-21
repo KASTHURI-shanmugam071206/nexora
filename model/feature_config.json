@@ -1,0 +1,16 @@
+{
+  "features": [
+    "stop_sequence",
+    "day_of_week",
+    "hour_of_day",
+    "is_weekend",
+    "is_rush_hour",
+    "current_speed_kmph",
+    "distance_to_next_stop_m",
+    "historical_avg_delay_min",
+    "weather",
+    "dwell_time_sec"
+  ],
+  "target": "actual_eta_min",
+  "test_mae_minutes": 0.555
+}
