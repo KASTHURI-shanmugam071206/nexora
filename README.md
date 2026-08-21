@@ -22,3 +22,32 @@ mappy_project/
 │   └── index.html              # Leaflet-based live map demo (PWA-style)
 └── requirements.txt
 ```
+
+## Dataset
+
+`data/bus_eta_dataset.csv` has **8,000 rows** simulating GPS/trip records
+across 6 routes and 24 buses, with realistic rush-hour, weekend, and
+weather patterns. Columns:
+
+| Column | Description |
+|---|---|
+| route_id, bus_id, stop_sequence | trip identifiers |
+| day_of_week, hour_of_day, is_weekend, is_rush_hour | time features |
+| current_speed_kmph | bus speed at time of reading |
+| distance_to_next_stop_m | distance remaining to next stop |
+| historical_avg_delay_min | route/time-bucket historical delay |
+| weather | 0 = clear, 1 = rain, 2 = heavy rain |
+| dwell_time_sec | time stopped at last stop (occupancy proxy) |
+| **actual_eta_min** | target — minutes to next stop |
+
+Regenerate or resize it any time:
+```bash
+python3 data/generate_dataset.py
+```
+Edit `N_ROWS` at the top of the script to change the row count.
+
+## 1. Setup
+
+```bash
+pip install -r requirements.txt
+```
