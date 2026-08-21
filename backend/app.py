@@ -153,3 +153,38 @@ def _route_payload():
             "schedule": route["schedule"],
         })
     return result
+
+def _time_to_minutes(value):
+    if value is None:
+        return None
+    try:
+        hour, minute = map(int, str(value).split(":"))
+        return hour * 60 + minute
+    except (TypeError, ValueError):
+        return None
+
+
+def _fmt_time(minutes):
+    hour = minutes // 60
+    minute = minutes % 60
+    return f"{hour:02d}:{minute:02d}"
+
+
+def _normalize_stop(value):
+    return " ".join(str(value).strip().lower().split())
+
+
+def _find_route_for_trip(start_name, end_name):
+    """
+    Find the best route for the selected origin and destination.
+
+    Priority:
+    1. Direct route where both stops exist and destination comes after origin.
+    2. If no direct route exists, find a route containing the destination.
+       This allows the frontend to show a useful destination route instead
+       of keeping the previously selected route.
+    """
+    start_key = _normalize_stop(start_name)
+    end_key = _normalize_stop(end_name)
+
+   
