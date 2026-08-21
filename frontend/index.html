@@ -52,7 +52,6 @@
       margin: 0 0 22px;
       color: var(--muted);
     }
-  </head>
    .field {
       display: grid;
       gap: 8px;
@@ -168,4 +167,44 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       padding: 16px;
+    }
+     .toolbar-card label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+    .toolbar-card select, .toolbar-card input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #0d1a22;
+      color: var(--text);
+    }
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 340px) 1fr;
+      gap: 18px;
+      padding: 18px 20px 20px;
+    }
+    .route-list {
+      display: grid;
+      gap: 12px;
+    }
+    .route-card {
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .route-card.active {
+      border-color: var(--green);
+      box-shadow: inset 0 0 0 1px rgba(56, 199, 147, 0.3);
+    }
+    .route-card:hover { transform: translateY(-1px); }
+    .route-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
     }
