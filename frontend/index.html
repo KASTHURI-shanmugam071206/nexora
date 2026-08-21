@@ -439,3 +439,73 @@
       return response.json();
     }
     
+    function buildMap() {
+      if (map) return map;
+      map = L.map('map').setView([11.017, 76.958], 13.5);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
+      return map;
+    }
+
+    function mapStopIcon(color) {
+      return L.divIcon({
+        html: `<div style="background:${color};width:18px;height:18px;border-radius:50%;border:3px solid white;box-shadow:0 0 8px rgba(0,0,0,0.4);"></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+      });
+    }
+
+    function busIcon(color) {
+      return L.divIcon({
+        html: `
+          <div style="background:${color};width:22px;height:22px;border-radius:8px;border:2px solid white;box-shadow:0 0 10px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;">
+            <div style="width:8px;height:8px;border-radius:50%;background:white;"></div>
+          </div>
+        `,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
+      });
+    }
+
+    function populateStopSelectors() {
+      const stopNames = [...new Set(routes.flatMap((route) => route.stops.map((stop) => stop.name)))];
+      fromStopSelect.innerHTML = stopNames.map((stopName) => `<option value="${stopName}">${stopName}</option>`).join('');
+      toStopSelect.innerHTML = stopNames.map((stopName) => `<option value="${stopName}">${stopName}</option>`).join('');
+      if (stopNames.length) {
+        fromStopSelect.value = stopNames[0];
+        toStopSelect.value = stopNames[Math.min(stopNames.length - 1, 1)];
+      }
+    }
+
+    function getNearestStopName(latitude, longitude) {
+      const allStops = routes.flatMap((route) => route.stops.map((stop) => ({ ...stop, routeId: route.route_id })));
+      if (!allStops.length) return '';
+
+      let nearestStop = allStops[0];
+      let nearestDistance = Number.POSITIVE_INFINITY;
+
+      allStops.forEach((stop) => {
+        const distance = Math.hypot(stop.lat - latitude, stop.lng - longitude);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestStop = stop;
+        }
+      });
+
+      return nearestStop.name;
+    }
+
+    function renderRouteList() {
+      routeList.innerHTML = routes.map((route) => `
+        <div class="route-card ${route.route_id === selectedRouteId ? 'active' : ''}" data-route-id="${route.route_id}">
+          <div class="route-top">
+            <div class="route-pill"><span class="dot" style="background:${route.color};"></span> ${route.route_id}</div>
+            <span style="color:${route.color};font-weight:700;">${route.schedule[0]}</span>
+          </div>
+          <h3>${route.from}</h3>
+          <p>to ${route.to}</p>
+          <p>${route.schedule.slice(0, 3).join(' • ')}</p>
+        </div>
+      `).join('');
