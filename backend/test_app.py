@@ -37,3 +37,13 @@ class AppApiTests(unittest.TestCase):
         payload = response.get_json()
         route_ids = {route["route_id"] for route in payload}
         self.assertTrue({"R01", "R02", "R03", "R04", "R05", "R06"}.issubset(route_ids))
+
+   def test_buses_endpoint_includes_at_least_five_buses_per_route(self):
+        client = app.test_client()
+        response = client.get("/api/buses?route_id=R01&time=09:30")
+        self.assertEqual(response.status_code, 200)
+        payload = response.get_json()
+        self.assertGreaterEqual(len(payload), 5)
+        self.assertTrue(all(item["route_id"] == "R01" for item in payload))
+
+   
