@@ -231,3 +231,58 @@ def _find_route_for_trip(start_name, end_name):
     # 3. No route found at all
     # ---------------------------------------------------------
     return None
+
+
+def _build_bus_matches(route_id, selected_minutes):
+    route_map = {route["route_id"]: route for route in _route_payload()}
+    route = route_map.get(route_id)
+    if route is None:
+        return []
+    fleet = ROUTE_BUS_FLEETS.get(route["route_id"], [f"{route['route_id']}-BUS{idx:02d}" for idx in range(1, 6)])
+    matches = []
+    offsets = [-12, -8, -4, 2, 9]
+    for idx, offset in enumerate(offsets):
+        bus_minutes = selected_minutes + offset
+        if bus_minutes < 0:
+            bus_minutes = 0
+        if bus_minutes > 23 * 60 + 59:
+            bus_minutes = 23 * 60 + 59
+        arrival_time = _fmt_time(bus_minutes)
+        stop_index = min(len(route["stops"]) - 1, max(0, idx % len(route["stops"])))
+        bus_stop = route["stops"][stop_index]
+        matches.append({
+            "bus_id": fleet[idx % len(fleet)],
+            "route_id": route["route_id"],
+            "from": route["from"],
+            "to": route["to"],
+            "color": route["color"],
+            "time": arrival_time,
+            "selected_time": _fmt_time(selected_minutes),
+            "status": "In window",
+            "lat": bus_stop["lat"] + random.uniform(-0.0009, 0.0009),
+            "lng": bus_stop["lng"] + random.uniform(-0.0009, 0.0009),
+            "direction": "Forward",
+            "route_stops": route["stops"],
+        })
+    return matches
+
+
+@app.route("/")
+def index():
+    return send_file(os.path.join(os.path.dirname(__file__), "..", "frontend", "index.html"))
+
+
+@app.route("/api/health")
+def health():
+    return jsonify({"status": "ok", "time": time.time()})
+
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    payload = request.get_json(force=True, silent=True) or {}
+    username = str(payload.get("username", "")).strip()
+    password = str(payload.get("password", "")).strip()
+    user = USERS.get(username)
+    if user and user["password"] == password:
+        return jsonify({"success": True, "user": username, "name": user["name"]})
+    return jsonify({"success": False, "message": "Invalid username or password."}), 401
