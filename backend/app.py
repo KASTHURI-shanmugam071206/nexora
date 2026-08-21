@@ -286,3 +286,65 @@ def login():
     if user and user["password"] == password:
         return jsonify({"success": True, "user": username, "name": user["name"]})
     return jsonify({"success": False, "message": "Invalid username or password."}), 401
+
+@app.route("/api/routes")
+def routes():
+    return jsonify(_route_payload())
+
+
+@app.route("/api/buses")
+def buses():
+    route_id = request.args.get("route_id")
+    selected_time = request.args.get("time")
+    selected_minutes = _time_to_minutes(selected_time) if selected_time else None
+    if selected_minutes is None:
+        now = datetime.now()
+        selected_minutes = now.hour * 60 + now.minute
+
+    if route_id:
+        route_map = {route["route_id"]: route for route in _route_payload()}
+        if route_map.get(route_id) is None:
+            return jsonify([])
+        return jsonify(_build_bus_matches(route_id, selected_minutes))
+
+    matches = []
+    for route in _route_payload():
+        matches.extend(_build_bus_matches(route["route_id"], selected_minutes))
+    return jsonify(matches)
+
+
+@app.route("/api/route-search")
+def route_search():
+    start_name = (request.args.get("from") or "").strip()
+    end_name = (request.args.get("to") or "").strip()
+    selected_time = request.args.get("time")
+
+    selected_minutes = (
+        _time_to_minutes(selected_time)
+        if selected_time
+        else None
+    )
+
+    if selected_minutes is None:
+        now = datetime.now()
+        selected_minutes = now.hour * 60 + now.minute
+
+    # ---------------------------------------------------------
+    # Validate input
+    # ---------------------------------------------------------
+    if not start_name or not end_name:
+        return jsonify({
+            "route_id": None,
+            "from": start_name,
+            "to": end_name,
+            "buses": [],
+            "message": "Please select both current location and destination."
+        }), 400
+
+    # Same location
+    if _normalize_stop(start_name) == _normalize_stop(end_name):
+        return jsonify({
+            "route_id": None,
+            "from": start_name,
+            "to": end_name,
+   
