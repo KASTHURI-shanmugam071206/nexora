@@ -10,4 +10,8 @@ class AppApiTests(unittest.TestCase):
             data=json.dumps({"username": "demo", "password": "pass123"}),
             content_type="application/json",
         )
+        self.assertEqual(response.status_code, 200)
+        payload = response.get_json()
+        self.assertTrue(payload["success"])
+        self.assertEqual(payload["user"], "demo")
 
