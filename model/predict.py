@@ -20,6 +20,7 @@ def _load():
             print(f"[WARN] Could not load ML model ({e}). Will use fallback only.")
             _model = False  
     return _model, _features
+    
 def fallback_eta(distance_to_next_stop_m: float, current_speed_kmph: float) -> float:
     """Simple physics fallback: distance / speed, in minutes."""
     safe_speed = max(current_speed_kmph, 3.0)  
@@ -33,7 +34,6 @@ def predict_eta(payload: dict) -> dict:
       stop_sequence, day_of_week, hour_of_day, is_weekend, is_rush_hour,
       current_speed_kmph, distance_to_next_stop_m, historical_avg_delay_min,
       weather, dwell_time_sec
-
 
     Returns: {"eta_min": float, "source": "ml" | "fallback"}
     """
@@ -55,5 +55,20 @@ def predict_eta(payload: dict) -> dict:
     )
     return {"eta_min": eta, "source": "fallback"}
 
-
+if __name__ == "__main__":
+    sample = {
+        "stop_sequence": 5,
+        "day_of_week": 1,
+        "hour_of_day": 9,
+        "is_weekend": 0,
+        "is_rush_hour": 1,
+        "current_speed_kmph": 14.5,
+        "distance_to_next_stop_m": 1200,
+        "historical_avg_delay_min": 3.2,
+        "weather": 0,
+        "dwell_time_sec": 40,
+    }
+    print("ML-path result:", predict_eta(sample))
+    
+    incomplete = {"distance_to_next_stop_m": 1200, "current_speed_kmph": 14.5}
     print("Fallback-only result:", predict_eta(incomplete))
