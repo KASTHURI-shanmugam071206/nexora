@@ -29,3 +29,11 @@ class AppApiTests(unittest.TestCase):
         self.assertIn("to", route)
         self.assertIn("schedule", route)
         self.assertIn("color", route)
+
+   def test_routes_endpoint_includes_all_dataset_routes(self):
+        client = app.test_client()
+        response = client.get("/api/routes")
+        self.assertEqual(response.status_code, 200)
+        payload = response.get_json()
+        route_ids = {route["route_id"] for route in payload}
+        self.assertTrue({"R01", "R02", "R03", "R04", "R05", "R06"}.issubset(route_ids))
