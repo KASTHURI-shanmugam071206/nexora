@@ -99,3 +99,26 @@
       color: var(--warning);
       font-size: 0.9rem;
     }
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: rgba(11, 22, 28, 0.94);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .brand span { color: var(--green); }
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
