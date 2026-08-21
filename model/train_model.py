@@ -52,3 +52,18 @@ model.fit(X_train, y_train)
 preds = model.predict(X_test)
 mae = mean_absolute_error(y_test, preds)
 r2 = r2_score(y_test, preds)
+
+print(f"Test MAE: {mae:.3f} minutes")
+print(f"Test R^2: {r2:.3f}")
+round(mae, 3)}, f, indent=2)
+
+
+print(f"\nModel saved -> {MODEL_PATH}")
+print(f"Feature config saved -> {FEATURES_PATH}")
+
+
+# Feature importance
+importances = sorted(zip(FEATURES, model.feature_importances_), key=lambda x: -x[1])
+print("\nFeature importance:")
+for name, score in importances:
+    print(f"  {name:28s} {score:.3f}")
