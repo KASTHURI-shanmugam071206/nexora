@@ -18,11 +18,42 @@ def _load():
                 _features = json.load(f)["features"]
         except Exception as e:
             print(f"[WARN] Could not load ML model ({e}). Will use fallback only.")
-            _model = False  # sentinel: tried and failed
+            _model = False  
     return _model, _features
 def fallback_eta(distance_to_next_stop_m: float, current_speed_kmph: float) -> float:
     """Simple physics fallback: distance / speed, in minutes."""
-    safe_speed = max(current_speed_kmph, 3.0)  # avoid divide-by-near-zero
+    safe_speed = max(current_speed_kmph, 3.0)  
     eta_min = (distance_to_next_stop_m / 1000) / safe_speed * 60
     return round(eta_min, 2)
 
+
+def predict_eta(payload: dict) -> dict:
+    """
+    payload keys expected (ML path):
+      stop_sequence, day_of_week, hour_of_day, is_weekend, is_rush_hour,
+      current_speed_kmph, distance_to_next_stop_m, historical_avg_delay_min,
+      weather, dwell_time_sec
+
+
+    Returns: {"eta_min": float, "source": "ml" | "fallback"}
+    """
+    model, features = _load()
+
+
+    if model and model is not False:
+        try:
+            row = {feat: payload[feat] for feat in features}
+            X = pd.DataFrame([row])
+            eta = float(model.predict(X)[0])
+            return {"eta_min": round(max(eta, 0.1), 2), "source": "ml"}
+        except (KeyError, Exception) as e:
+            print(f"[WARN] ML prediction failed ({e}). Falling back.")
+            
+    eta = fallback_eta(
+        payload.get("distance_to_next_stop_m", 500),
+        payload.get("current_speed_kmph", 15),
+    )
+    return {"eta_min": eta, "source": "fallback"}
+
+
+    print("Fallback-only result:", predict_eta(incomplete))
