@@ -77,3 +77,79 @@ ROUTE_STOPS = {
     ],
 }
 
+ROUTES = [
+    {
+        "route_id": "R01",
+        "from": "Central Bus Stand",
+        "to": "Avinashi Road Terminal",
+        "color": "#ff6b6b",
+        "schedule": ["07:10", "08:20", "09:40", "10:55", "12:15", "14:05", "16:30", "17:50"],
+    },
+    {
+        "route_id": "R02",
+        "from": "Race Course",
+        "to": "Singanallur Depot",
+        "color": "#4cc9f0",
+        "schedule": ["06:45", "08:00", "09:15", "11:30", "13:05", "15:25", "17:15", "18:40"],
+    },
+    {
+        "route_id": "R03",
+        "from": "Town Hall",
+        "to": "Airport Link",
+        "color": "#ffd166",
+        "schedule": ["07:00", "08:40", "10:20", "12:05", "14:15", "16:00", "17:45", "19:10"],
+    },
+    {
+        "route_id": "R04",
+        "from": "Pillayar Koil",
+        "to": "Kovaipudur Junction",
+        "color": "#8ac926",
+        "schedule": ["06:30", "07:50", "09:10", "11:00", "13:20", "15:10", "17:00", "18:30"],
+    },
+    {
+        "route_id": "R05",
+        "from": "Hoody",
+        "to": "IIT Bus Stop",
+        "color": "#ff9f1c",
+        "schedule": ["06:50", "08:15", "09:50", "11:45", "13:45", "15:35", "17:30", "19:05"],
+    },
+    {
+        "route_id": "R06",
+        "from": "Kurinji Nagar",
+        "to": "Thudiyalur",
+        "color": "#9b5de5",
+        "schedule": ["07:20", "08:35", "10:05", "12:30", "14:40", "16:20", "18:00", "19:40"],
+    },
+    {
+        "route_id": "R07",
+        "from": "Ukkadam",
+        "to": "Singanallur Depot",
+        "color": "#ff006e",
+        "schedule": ["07:05", "08:25", "09:45", "11:15", "13:30", "15:40", "17:20", "19:00"],
+    },
+]
+
+ROUTE_BUS_FLEETS = {
+    "R01": ["BUS101", "BUS102", "BUS103", "BUS104", "BUS105"],
+    "R02": ["BUS201", "BUS202", "BUS203", "BUS204", "BUS205"],
+    "R03": ["BUS301", "BUS302", "BUS303", "BUS304", "BUS305"],
+    "R04": ["BUS401", "BUS402", "BUS403", "BUS404", "BUS405"],
+    "R05": ["BUS501", "BUS502", "BUS503", "BUS504", "BUS505"],
+    "R06": ["BUS601", "BUS602", "BUS603", "BUS604", "BUS605"],
+    "R07": ["BUS701", "BUS702", "BUS703", "BUS704", "BUS705"],
+}
+
+
+def _route_payload():
+    result = []
+    for route in ROUTES:
+        route_id = route["route_id"]
+        result.append({
+            "route_id": route_id,
+            "from": route["from"],
+            "to": route["to"],
+            "color": route["color"],
+            "stops": ROUTE_STOPS[route_id],
+            "schedule": route["schedule"],
+        })
+    return result
