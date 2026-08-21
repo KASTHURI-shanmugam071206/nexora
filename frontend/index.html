@@ -265,3 +265,120 @@
       color: var(--text);
       font-size: 0.8rem;
     }
+    .bus-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .bus-card h4 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+    .bus-card p {
+      margin: 6px 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+    .time-strong {
+      color: var(--green);
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    footer {
+      display: flex;
+      justify-content: center;
+      padding: 0 20px 20px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    @media (max-width: 900px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      #map { height: 400px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-shell" id="loginScreen">
+    <div class="login-card">
+      <h1>MAPPY</h1>
+      <p>Sign in to view bus routes, timings, and live map details.</p>
+      <form id="loginForm">
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" value="demo" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" value="pass123" autocomplete="current-password" />
+        </div>
+        <button type="submit" class="login-btn">Login</button>
+        <div class="message" id="loginMessage"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-shell hidden" id="appScreen">
+    <header>
+      <div class="brand">MAPPY <span>Transit</span></div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="nav-tabs">
+          <button class="nav-btn active" id="navHome" data-page="home">Trip Search</button>
+          <button class="nav-btn" id="navRoutes" data-page="routes">Bus Routes</button>
+        </div>
+        <div class="user-badge" id="userBadge">Guest</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="toolbar-card">
+        <label for="fromStopSelect">Current location</label>
+        <select id="fromStopSelect"></select>
+        <button type="button" class="location-btn" id="useLocationBtn">Use my location</button>
+      </div>
+      <div class="toolbar-card">
+        <label for="toStopSelect">Destination</label>
+        <select id="toStopSelect"></select>
+      </div>
+      <div class="toolbar-card">
+        <label for="timeInput">Search buses around time</label>
+        <input id="timeInput" type="time" value="09:30" />
+      </div>
+      <div class="toolbar-card" style="display:flex;align-items:flex-end;">
+        <button class="search-btn" id="searchBtn">Find buses</button>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="route-list" id="routeList"></div>
+      <div class="route-details">
+        <div class="toolbar-card" id="routeSummary"></div>
+        <div id="map"></div>
+        <div class="toolbar-card">
+          <div class="route-header">
+            <h2>Buses in time window</h2>
+            <span style="color: var(--muted); font-size: 0.85rem;">± 15 minutes</span>
+          </div>
+          <div class="bus-list" id="busList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-grid hidden" id="routesPage">
+      <div style="grid-column: 1 / -1; display: grid; gap: 16px;">
+        <div class="toolbar-card">
+          <h2 style="margin: 0 0 16px;">All Available Bus Routes</h2>
+          <div class="route-list" id="allRoutesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;"></div>
+        </div>
+        <div class="toolbar-card">
+          <h3 style="margin-top: 0;">Route Details</h3>
+          <div id="routeDetailsPanel"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>MAPPY demo route planner — unique color-coded routes and time-window bus details.</footer>
+  </div>
