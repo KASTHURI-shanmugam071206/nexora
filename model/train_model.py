@@ -29,3 +29,26 @@ FEATURES = [
     "weather",
     "dwell_time_sec",
 ]
+
+TARGET = "actual_eta_min"
+
+X = df[FEATURES]
+y = df[TARGET]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = xgb.XGBRegressor(
+    n_estimators=300,
+    max_depth=5,
+    learning_rate=0.05,
+    subsample=0.85,
+    colsample_bytree=0.85,
+    random_state=42,
+    objective="reg:squarederror",
+)
+
+model.fit(X_train, y_train)
+
+preds = model.predict(X_test)
+mae = mean_absolute_error(y_test, preds)
+r2 = r2_score(y_test, preds)
