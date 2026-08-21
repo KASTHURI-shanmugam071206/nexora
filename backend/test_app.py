@@ -46,4 +46,17 @@ class AppApiTests(unittest.TestCase):
         self.assertGreaterEqual(len(payload), 5)
         self.assertTrue(all(item["route_id"] == "R01" for item in payload))
 
+    def test_route_search_matches_user_from_and_destination(self):
+        client = app.test_client()
+        response = client.get("/api/route-search?from=Central%20Bus%20Stand&to=Avinashi%20Road%20Terminal&time=09:30")
+        self.assertEqual(response.status_code, 200)
+        payload = response.get_json()
+        self.assertEqual(payload["route_id"], "R01")
+        self.assertEqual(payload["from"], "Central Bus Stand")
+        self.assertEqual(payload["to"], "Avinashi Road Terminal")
+        self.assertGreaterEqual(len(payload["buses"]), 5)
+
+if __name__ == "__main__":
+    unittest.main()
+
    
