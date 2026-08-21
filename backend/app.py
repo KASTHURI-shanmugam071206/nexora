@@ -48,3 +48,32 @@ ROUTE_STOPS = {
         {"lat": 11.0090, "lng": 76.9650, "name": "Town Hall"},
         {"lat": 11.0145, "lng": 76.9638, "name": "Ukkadam"},
         
+{"lat": 11.0188, "lng": 76.9612, "name": "MTP Road"},
+        {"lat": 11.0240, "lng": 76.9590, "name": "Airport Link"},
+    ],
+    "R04": [
+        {"lat": 11.0305, "lng": 76.9490, "name": "Pillayar Koil"},
+        {"lat": 11.0280, "lng": 76.9525, "name": "Sivananda Colony"},
+        {"lat": 11.0240, "lng": 76.9580, "name": "Nehru Stadium"},
+        {"lat": 11.0195, "lng": 76.9625, "name": "Kovaipudur Junction"},
+    ],
+    "R05": [
+        {"lat": 11.0060, "lng": 76.9720, "name": "Hoody"},
+        {"lat": 11.0115, "lng": 76.9688, "name": "Ramanathapuram"},
+        {"lat": 11.0165, "lng": 76.9655, "name": "Saibaba Colony"},
+        {"lat": 11.0210, "lng": 76.9610, "name": "IIT Bus Stop"},
+    ],
+    "R06": [
+        {"lat": 11.0260, "lng": 76.9455, "name": "Kurinji Nagar"},
+        {"lat": 11.0225, "lng": 76.9510, "name": "Vadavalli"},
+        {"lat": 11.0180, "lng": 76.9555, "name": "Ranganathapuram"},
+        {"lat": 11.0125, "lng": 76.9615, "name": "Thudiyalur"},
+    ],
+    "R07": [
+        {"lat": 11.0145, "lng": 76.9638, "name": "Ukkadam"},
+        {"lat": 11.0170, "lng": 76.9620, "name": "MTP Road"},
+        {"lat": 11.0190, "lng": 76.9600, "name": "Peelamedu Station"},
+        {"lat": 11.0220, "lng": 76.9630, "name": "Singanallur Depot"},
+    ],
+}
+
