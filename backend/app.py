@@ -348,3 +348,82 @@ def route_search():
             "from": start_name,
             "to": end_name,
    
+         "buses": [],
+            "message": "Current location and destination cannot be the same."
+        })
+
+    # ---------------------------------------------------------
+    # Find route
+    # ---------------------------------------------------------
+    route = _find_route_for_trip(start_name, end_name)
+
+    if route is None:
+        return jsonify({
+            "route_id": None,
+            "from": start_name,
+            "to": end_name,
+            "buses": [],
+            "message": (
+                f"No bus route found from {start_name} "
+                f"to {end_name}."
+            )
+        })
+    # ---------------------------------------------------------
+    # Build buses for selected route
+    # ---------------------------------------------------------
+    buses = _build_bus_matches(
+        route["route_id"],
+        selected_minutes
+    )
+
+    match_type = route.get("match_type", "direct")
+
+    if match_type == "direct":
+        message = (
+            f"Direct route found from {start_name} "
+            f"to {end_name}."
+        )
+    else:
+        message = (
+            f"No direct route from {start_name} to {end_name}. "
+            f"Showing buses serving {end_name}."
+        )
+    return jsonify({
+        "route_id": route["route_id"],
+        "from": start_name,
+        "to": end_name,
+        "color": route["color"],
+        "stops": route["stops"],
+        "schedule": route["schedule"],
+        "buses": buses,
+        "match_type": match_type,
+        "message": message
+    })
+
+@app.route("/api/eta", methods=["POST"])
+def eta():
+    """
+    Body JSON example:
+    {
+      "stop_sequence": 5, "day_of_week": 1, "hour_of_day": 9,
+      "is_weekend": 0, "is_rush_hour": 1, "current_speed_kmph": 14.5,
+      "distance_to_next_stop_m": 1200, "historical_avg_delay_min": 3.2,
+      "weather": 0, "dwell_time_sec": 40
+    }
+    Minimal fallback-only body:
+    { "distance_to_next_stop_m": 1200, "current_speed_kmph": 14.5 }
+    """
+    payload = request.get_json(force=True, silent=True) or {}
+    result = predict_eta(payload)
+    return jsonify(result)
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True,
+        use_reloader=False
+    )
+USERS = {
+    "demo": {"password": "pass123", "name": "Demo User"},
+    "admin": {"password": "admin123", "name": "Admin User"},
+}
