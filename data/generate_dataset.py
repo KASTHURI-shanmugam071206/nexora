@@ -39,3 +39,41 @@ for _ in range(N_ROWS):
     historical_avg_delay_min = np.round(np.clip(hist_base, 0, 12), 2)
 
 print(df.describe(include="all").T[["count", "mean", "min", "max"]])
+
+    # Weather impact (simple categorical: 0=clear,1=rain,2=heavy rain)
+    weather = np.random.choice([0, 1, 2], p=[0.75, 0.20, 0.05])
+    weather_delay_factor = {0: 0, 1: 1.5, 2: 4.0}[weather]
+
+    # Occupancy proxy: dwell time at stops (seconds)
+    dwell_time_sec = np.round(np.clip(np.random.normal(35 if not is_rush_hour else 65, 15), 5, 180), 1)
+
+    # ---- Target: actual ETA (minutes) to next stop ----
+    physics_eta = (distance_to_next_stop / 1000) / max(current_speed_kmph, 3) * 60  # minutes
+    noise = np.random.normal(0, 0.6)
+    actual_eta_min = np.round(
+        physics_eta + historical_avg_delay_min * 0.4 + weather_delay_factor * 0.5 + noise,
+        2
+    )
+    actual_eta_min = max(actual_eta_min, 0.3)
+
+    rows.append({
+        "route_id": route_id,
+        "bus_id": bus_id,
+        "stop_sequence": stop_seq,
+        "day_of_week": day_of_week,
+        "hour_of_day": hour,
+        "is_weekend": is_weekend,
+        "is_rush_hour": is_rush_hour,
+        "current_speed_kmph": current_speed_kmph,
+        "distance_to_next_stop_m": distance_to_next_stop,
+        "historical_avg_delay_min": historical_avg_delay_min,
+        "weather": weather,                      # 0 clear, 1 rain, 2 heavy rain
+        "dwell_time_sec": dwell_time_sec,
+        "actual_eta_min": actual_eta_min          # <-- prediction target
+    })
+
+df = pd.DataFrame(rows)
+df.to_csv("/home/claude/mappy_project/data/bus_eta_dataset.csv", index=False)
+print(f"Generated {len(df)} rows -> data/bus_eta_dataset.csv")
+print(df.head())
+print("\nSummary stats:")
