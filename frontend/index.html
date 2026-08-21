@@ -366,7 +366,6 @@
         </div>
       </div>
     </div>
-
     <div class="main-grid hidden" id="routesPage">
       <div style="grid-column: 1 / -1; display: grid; gap: 16px;">
         <div class="toolbar-card">
@@ -379,7 +378,6 @@
         </div>
       </div>
     </div>
-
     <footer>MAPPY demo route planner — unique color-coded routes and time-window bus details.</footer>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -401,3 +399,43 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const searchBtn = document.getElementById('searchBtn');
     const useLocationBtn = document.getElementById('useLocationBtn');
+
+    function safeSetRouteSelect(value) {
+      if (routeSelect) {
+        routeSelect.value = value;
+      }
+    }
+
+    let routes = [];
+    let selectedRouteId = '';
+    let map = null;
+
+    function showLogin() {
+      loginScreen.classList.remove('hidden');
+      appScreen.classList.add('hidden');
+    }
+    function showApp() {
+      loginScreen.classList.add('hidden');
+      appScreen.classList.remove('hidden');
+    }
+    function getSavedUser() {
+      return localStorage.getItem(USER_KEY) || '';
+    }
+    function saveUser(username) {
+      localStorage.setItem(USER_KEY, username);
+    }
+    function clearUser() {
+      localStorage.removeItem(USER_KEY);
+    }
+    function setUserBadge(name) {
+      userBadge.textContent = name || 'Guest';
+    }
+    async function fetchJson(url, options) {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.message || 'Request failed');
+      }
+      return response.json();
+    }
+
