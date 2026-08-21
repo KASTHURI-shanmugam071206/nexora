@@ -31,8 +31,20 @@ from predict import predict_eta  # noqa: E402
 
 app = Flask(__name__)
 CORS(app)
-
-USERS = {
-    "demo": {"password": "pass123", "name": "Demo User"},
-    "admin": {"password": "admin123", "name": "Admin User"},
-}
+ROUTE_STOPS = {
+    "R01": [
+        {"lat": 11.0168, "lng": 76.9558, "name": "Central Bus Stand"},
+        {"lat": 11.0200, "lng": 76.9600, "name": "Gandhipuram Junction"},
+        {"lat": 11.0230, "lng": 76.9650, "name": "Brookefields Mall"},
+        {"lat": 11.0260, "lng": 76.9700, "name": "Avinashi Road Terminal"},
+    ],
+    "R02": [
+        {"lat": 11.0100, "lng": 76.9500, "name": "Race Course"},
+        {"lat": 11.0140, "lng": 76.9550, "name": "Kaveri Nagar"},
+        {"lat": 11.0180, "lng": 76.9590, "name": "Peelamedu Station"},
+        {"lat": 11.0220, "lng": 76.9630, "name": "Singanallur Depot"},
+    ],
+    "R03": [
+        {"lat": 11.0090, "lng": 76.9650, "name": "Town Hall"},
+        {"lat": 11.0145, "lng": 76.9638, "name": "Ukkadam"},
+        
